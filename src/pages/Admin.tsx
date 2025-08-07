@@ -36,7 +36,7 @@ const Admin = () => {
       id: 1,
       name: "Premium Blue Light Glasses",
       brand: "VisionPro",
-      price: "$129.99",
+      price: "₹10,399",
       image: spectacle1,
       category: "Computer Glasses",
       inStock: true,
@@ -45,7 +45,7 @@ const Admin = () => {
       id: 2,
       name: "Classic Gold Reading Glasses",
       brand: "ElegantFrames",
-      price: "$89.99",
+      price: "₹7,199",
       image: spectacle2,
       category: "Reading Glasses",
       inStock: true,
@@ -54,7 +54,7 @@ const Admin = () => {
       id: 3,
       name: "Titanium Progressive Lenses",
       brand: "TechVision",
-      price: "$299.99",
+      price: "₹24,099",
       image: spectacle3,
       category: "Progressive",
       inStock: false,
@@ -216,7 +216,7 @@ const Admin = () => {
                       id="price"
                       value={newItem.price}
                       onChange={(e) => setNewItem(prev => ({ ...prev, price: e.target.value }))}
-                      placeholder="$0.00"
+                      placeholder="₹0.00"
                       className="h-11"
                       required
                     />

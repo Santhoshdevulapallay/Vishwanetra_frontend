@@ -20,7 +20,7 @@ const Dashboard = () => {
       id: 1,
       name: "Premium Blue Light Glasses",
       brand: "VisionPro",
-      price: "$129.99",
+      price: "₹10,399",
       image: spectacle1,
       rating: 4.8,
       category: "Computer Glasses",
@@ -30,7 +30,7 @@ const Dashboard = () => {
       id: 2,
       name: "Classic Gold Reading Glasses",
       brand: "ElegantFrames",
-      price: "$89.99",
+      price: "₹7,199",
       image: spectacle2,
       rating: 4.6,
       category: "Reading Glasses",
@@ -40,7 +40,7 @@ const Dashboard = () => {
       id: 3,
       name: "Titanium Progressive Lenses",
       brand: "TechVision",
-      price: "$299.99",
+      price: "₹24,099",
       image: spectacle3,
       rating: 4.9,
       category: "Progressive",
@@ -58,7 +58,7 @@ const Dashboard = () => {
     },
     {
       title: "Monthly Revenue",
-      value: "$47,821",
+      value: "₹38,25,680",
       change: "+8.2%",
       icon: TrendingUp,
       color: "text-medical-success",
@@ -92,7 +92,7 @@ const Dashboard = () => {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-foreground">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Welcome to VisionVault
+              Welcome to Vishwa Netra
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Professional optical management system for modern eye care practices

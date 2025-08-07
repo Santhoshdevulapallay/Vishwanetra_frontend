@@ -34,11 +34,11 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
     // Simulate API call
     setTimeout(() => {
       // Demo credentials - in production, this would be validated against backend
-      if (email === "admin@visionvault.com" && password === "admin123") {
+      if (email === "admin@vishwanetra.com" && password === "admin123") {
         onLogin(email, password);
         toast({
           title: "Welcome back!",
-          description: "Successfully logged into VisionVault",
+          description: "Successfully logged into Vishwa Netra",
         });
       } else {
         toast({
@@ -59,7 +59,7 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center mx-auto mb-4 shadow-elevated">
             <Eye className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">VisionVault</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Vishwa Netra</h1>
           <p className="text-muted-foreground">Optical Management System</p>
         </div>
 
@@ -81,7 +81,7 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@visionvault.com"
+                    placeholder="admin@vishwanetra.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10 h-12 border-border/50 focus:border-primary"
@@ -132,7 +132,7 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
 
             <div className="mt-6 text-center">
               <p className="text-xs text-muted-foreground">
-                Demo Credentials: admin@visionvault.com / admin123
+                Demo Credentials: admin@vishwanetra.com / admin123
               </p>
             </div>
           </CardContent>
