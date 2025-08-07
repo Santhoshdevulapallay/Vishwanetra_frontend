@@ -34,7 +34,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
               <Eye className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">VisionVault</h1>
+              <h1 className="text-xl font-bold text-foreground">Vishwa Netra</h1>
               <p className="text-xs text-muted-foreground">Optical Management</p>
             </div>
           </div>
