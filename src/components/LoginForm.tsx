@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, UserCheck, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { loginUser } from "@/services/httpService";
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => void;
@@ -17,39 +18,36 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
-      return;
-    }
+ const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      // Demo credentials - in production, this would be validated against backend
-      if (email === "admin@vishwanetra.com" && password === "admin123") {
-        onLogin(email, password);
+      if (!email || !password) {
         toast({
-          title: "Welcome back!",
-          description: "Successfully logged into Vishwa Netra",
-        });
-      } else {
-        toast({
-          title: "Authentication Failed",
-          description: "Invalid email or password",
+          title: "Validation Error",
+          description: "Please fill in all fields",
           variant: "destructive",
         });
+        return;
       }
-      setIsLoading(false);
-    }, 1000);
-  };
+      setIsLoading(true);
+      try {
+        const data = await loginUser(email, password);
+        toast({
+          title: "Welcome back!",
+          description: "Login successful",
+        });
+        onLogin(email, password);
+        console.log("Access Token:", data.access);
+      } catch (error: any) {
+        toast({
+          title: "Authentication Failed",
+          description: error.response?.data?.detail || "Invalid credentials",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary/20 to-background p-4">
