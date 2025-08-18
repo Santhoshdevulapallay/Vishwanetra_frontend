@@ -31,11 +31,11 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
       }
       setIsLoading(true);
       try {
-        const data = await loginUser(email, password);
-        toast({
-          title: "Welcome back!",
-          description: "Login successful",
-        });
+        // const data = await loginUser(email, password);
+        // toast({
+        //   title: "Welcome back!",
+        //   description: "Login successful",
+        // });
         onLogin(email, password);
         console.log("Access Token:", data.access);
       } catch (error: any) {
