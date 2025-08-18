@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -16,9 +17,12 @@ interface PatientRecord {
   id: string;
   patientName: string;
   contactNo: string;
+  lenses: string;
   fileName: string;
   fileUrl: string;
   amount: number;
+  advanceAmount: number;
+  paymentMode: string;
   createdAt: Date;
 }
 
@@ -28,27 +32,36 @@ const mockRecords: PatientRecord[] = [
     id: "1",
     patientName: "Raj Kumar",
     contactNo: "9876543210",
+    lenses: "Progressive Lenses",
     fileName: "prescription_1.jpg",
     fileUrl: "/placeholder.svg",
     amount: 2500,
+    advanceAmount: 1000,
+    paymentMode: "PhonePe",
     createdAt: new Date(2024, 7, 15),
   },
   {
     id: "2", 
     patientName: "Priya Sharma",
     contactNo: "8765432109",
+    lenses: "Anti-Glare Lenses",
     fileName: "lenses_order.png",
     fileUrl: "/placeholder.svg",
     amount: 3200,
+    advanceAmount: 1500,
+    paymentMode: "GPay",
     createdAt: new Date(2024, 7, 20),
   },
   {
     id: "3",
     patientName: "Amit Singh",
     contactNo: "7654321098",
+    lenses: "Blue Light Filter",
     fileName: "eye_test.jpg",
     fileUrl: "/placeholder.svg", 
     amount: 1800,
+    advanceAmount: 800,
+    paymentMode: "Cash",
     createdAt: new Date(2024, 8, 5),
   },
 ];
@@ -57,7 +70,10 @@ export default function PatientRecords() {
   const [formData, setFormData] = useState({
     patientName: "",
     contactNo: "",
+    lenses: "",
     amount: "",
+    advanceAmount: "",
+    paymentMode: "",
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,7 +116,8 @@ export default function PatientRecords() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.patientName || !formData.contactNo || !formData.amount || !selectedFile) {
+    if (!formData.patientName || !formData.contactNo || !formData.lenses || !formData.amount || 
+        !formData.advanceAmount || !formData.paymentMode || !selectedFile) {
       toast({
         title: "Missing fields",
         description: "Please fill all fields and upload a file",
@@ -124,7 +141,10 @@ export default function PatientRecords() {
       setFormData({
         patientName: "",
         contactNo: "",
+        lenses: "",
         amount: "",
+        advanceAmount: "",
+        paymentMode: "",
       });
       setSelectedFile(null);
       
@@ -149,13 +169,15 @@ export default function PatientRecords() {
     const isInDateRange = recordDate >= dateRange.from && recordDate <= dateRange.to;
     const matchesSearch = searchTerm === "" || 
       record.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      record.contactNo.includes(searchTerm);
+      record.contactNo.includes(searchTerm) ||
+      record.paymentMode.toLowerCase().includes(searchTerm.toLowerCase());
     
     return isInDateRange && matchesSearch;
   });
 
-  // Calculate total amount
+  // Calculate total amounts
   const totalAmount = filteredRecords.reduce((sum, record) => sum + record.amount, 0);
+  const totalAdvanceAmount = filteredRecords.reduce((sum, record) => sum + record.advanceAmount, 0);
 
   return (
     <div className="space-y-6">
@@ -209,6 +231,18 @@ export default function PatientRecords() {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="lenses">Lenses</Label>
+                  <Input
+                    id="lenses"
+                    name="lenses"
+                    value={formData.lenses}
+                    onChange={handleInputChange}
+                    placeholder="Enter lens type (e.g., Progressive, Anti-glare)"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="file-upload">Upload File (.jpg, .png only)</Label>
                   <div className="flex items-center gap-4">
                     <Input
@@ -228,19 +262,50 @@ export default function PatientRecords() {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="amount">Amount (₹)</Label>
+                    <Input
+                      id="amount"
+                      name="amount"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formData.amount}
+                      onChange={handleInputChange}
+                      placeholder="Enter total amount"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="advanceAmount">Advance Amount (₹)</Label>
+                    <Input
+                      id="advanceAmount"
+                      name="advanceAmount"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formData.advanceAmount}
+                      onChange={handleInputChange}
+                      placeholder="Enter advance amount"
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="amount">Amount (₹)</Label>
-                  <Input
-                    id="amount"
-                    name="amount"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={formData.amount}
-                    onChange={handleInputChange}
-                    placeholder="Enter amount in rupees"
-                    required
-                  />
+                  <Label htmlFor="paymentMode">Payment Mode</Label>
+                  <Select value={formData.paymentMode} onValueChange={(value) => setFormData(prev => ({ ...prev, paymentMode: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select payment mode" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="PhonePe">PhonePe</SelectItem>
+                      <SelectItem value="GPay">GPay</SelectItem>
+                      <SelectItem value="Cash">Cash</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <Button type="submit" disabled={isSubmitting} className="w-full md:w-auto">
@@ -322,7 +387,7 @@ export default function PatientRecords() {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                     <Input
-                      placeholder="Search by name or contact..."
+                      placeholder="Search by name, contact, or payment mode..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-10"
@@ -338,15 +403,18 @@ export default function PatientRecords() {
                     <TableRow>
                       <TableHead>Patient Name</TableHead>
                       <TableHead>Contact No</TableHead>
+                      <TableHead>Lenses</TableHead>
                       <TableHead>Uploaded File</TableHead>
                       <TableHead className="text-right">Amount (₹)</TableHead>
+                      <TableHead className="text-right">Advance (₹)</TableHead>
+                      <TableHead>Payment Mode</TableHead>
                       <TableHead>Date</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredRecords.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center text-muted-foreground">
+                        <TableCell colSpan={8} className="text-center text-muted-foreground">
                           No records found for the selected criteria
                         </TableCell>
                       </TableRow>
@@ -355,6 +423,7 @@ export default function PatientRecords() {
                         <TableRow key={record.id}>
                           <TableCell className="font-medium">{record.patientName}</TableCell>
                           <TableCell>{record.contactNo}</TableCell>
+                          <TableCell>{record.lenses}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
                               <Button variant="outline" size="sm" asChild>
@@ -366,6 +435,12 @@ export default function PatientRecords() {
                             </div>
                           </TableCell>
                           <TableCell className="text-right">₹{record.amount.toLocaleString('en-IN')}</TableCell>
+                          <TableCell className="text-right">₹{record.advanceAmount.toLocaleString('en-IN')}</TableCell>
+                          <TableCell>
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                              {record.paymentMode}
+                            </span>
+                          </TableCell>
                           <TableCell>{format(record.createdAt, "dd/MM/yyyy")}</TableCell>
                         </TableRow>
                       ))
@@ -374,14 +449,22 @@ export default function PatientRecords() {
                 </Table>
               </div>
 
-              {/* Total Amount */}
+              {/* Total Amounts */}
               {filteredRecords.length > 0 && (
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-4">
                   <Card className="w-fit">
                     <CardContent className="pt-4">
                       <div className="text-right">
                         <p className="text-sm text-muted-foreground">Total Amount</p>
                         <p className="text-2xl font-bold text-primary">₹{totalAmount.toLocaleString('en-IN')}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="w-fit">
+                    <CardContent className="pt-4">
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Total Advance Amount</p>
+                        <p className="text-2xl font-bold text-secondary">₹{totalAdvanceAmount.toLocaleString('en-IN')}</p>
                       </div>
                     </CardContent>
                   </Card>
