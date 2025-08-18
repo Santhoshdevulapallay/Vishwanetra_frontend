@@ -5,7 +5,8 @@ import {
   FileText, 
   Receipt, 
   Settings, 
-  LogOut 
+  LogOut,
+  History
 } from "lucide-react";
 import {
   Sidebar,
@@ -36,6 +37,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
     { path: "/dashboard", label: "Home", icon: Home },
     { path: "/prescription", label: "Prescription", icon: FileText },
     { path: "/invoice", label: "Invoice", icon: Receipt },
+    { path: "/patient-records", label: "Patient Records", icon: History },
     { path: "/admin", label: "Admin", icon: Settings },
   ];
 
