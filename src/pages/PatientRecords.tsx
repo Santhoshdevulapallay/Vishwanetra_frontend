@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { format, subMonths } from "date-fns";
 import { CalendarIcon, Upload, Search, Download } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -66,17 +70,49 @@ const mockRecords: PatientRecord[] = [
   },
 ];
 
+// Form validation schema
+const formSchema = z.object({
+  patientName: z.string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must not exceed 50 characters"),
+  contactNo: z.string()
+    .regex(/^\d{10}$/, "Contact number must be exactly 10 digits"),
+  lenses: z.string()
+    .max(50, "Lenses description must not exceed 50 characters")
+    .optional(),
+  amount: z.number()
+    .min(0.01, "Amount must be greater than 0"),
+  advanceAmount: z.number()
+    .min(0, "Advance amount must be 0 or greater")
+    .optional(),
+  paymentMode: z.enum(["PhonePe", "GPay", "Cash"]),
+}).refine((data) => {
+  if (data.advanceAmount && data.advanceAmount > data.amount) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Advance amount cannot be greater than total amount",
+  path: ["advanceAmount"],
+});
+
+type FormData = z.infer<typeof formSchema>;
+
 export default function PatientRecords() {
-  const [formData, setFormData] = useState({
-    patientName: "",
-    contactNo: "",
-    lenses: "",
-    amount: "",
-    advanceAmount: "",
-    paymentMode: "",
-  });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      patientName: "",
+      contactNo: "",
+      lenses: "",
+      amount: 0,
+      advanceAmount: 0,
+      paymentMode: undefined,
+    },
+  });
   
   // Date range for records
   const [dateRange, setDateRange] = useState<{
@@ -88,14 +124,6 @@ export default function PatientRecords() {
   });
   
   const [searchTerm, setSearchTerm] = useState("");
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -109,18 +137,26 @@ export default function PatientRecords() {
         });
         return;
       }
+      
+      // Validate file size (2MB limit)
+      if (file.size > 2 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "File size must be less than 2MB",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       setSelectedFile(file);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.patientName || !formData.contactNo || !formData.lenses || !formData.amount || 
-        !formData.advanceAmount || !formData.paymentMode || !selectedFile) {
+  const onSubmit = async (data: FormData) => {
+    if (!selectedFile) {
       toast({
-        title: "Missing fields",
-        description: "Please fill all fields and upload a file",
+        title: "Missing file",
+        description: "Please upload a file",
         variant: "destructive",
       });
       return;
@@ -132,20 +168,16 @@ export default function PatientRecords() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      console.log('Form data:', data);
+      console.log('File:', selectedFile);
+      
       toast({
         title: "Record saved successfully",
-        description: `Patient record for ${formData.patientName} has been saved.`,
+        description: `Patient record for ${data.patientName} has been saved.`,
       });
       
       // Reset form
-      setFormData({
-        patientName: "",
-        contactNo: "",
-        lenses: "",
-        amount: "",
-        advanceAmount: "",
-        paymentMode: "",
-      });
+      form.reset();
       setSelectedFile(null);
       
       // Reset file input
@@ -201,117 +233,152 @@ export default function PatientRecords() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="patientName">Name of Patient</Label>
-                    <Input
-                      id="patientName"
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
                       name="patientName"
-                      value={formData.patientName}
-                      onChange={handleInputChange}
-                      placeholder="Enter patient name"
-                      required
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name of Patient *</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter patient name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="contactNo">Contact Number</Label>
-                    <Input
-                      id="contactNo"
+                    
+                    <FormField
+                      control={form.control}
                       name="contactNo"
-                      type="tel"
-                      value={formData.contactNo}
-                      onChange={handleInputChange}
-                      placeholder="Enter 10-digit contact number"
-                      pattern="[0-9]{10}"
-                      required
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Contact Number *</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter 10-digit contact number"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="lenses">Lenses</Label>
-                  <Input
-                    id="lenses"
+                  <FormField
+                    control={form.control}
                     name="lenses"
-                    value={formData.lenses}
-                    onChange={handleInputChange}
-                    placeholder="Enter lens type (e.g., Progressive, Anti-glare)"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="file-upload">Upload File (.jpg, .png only)</Label>
-                  <div className="flex items-center gap-4">
-                    <Input
-                      id="file-upload"
-                      type="file"
-                      accept=".jpg,.jpeg,.png"
-                      onChange={handleFileChange}
-                      className="cursor-pointer"
-                      required
-                    />
-                    {selectedFile && (
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Upload className="w-4 h-4" />
-                        {selectedFile.name}
-                      </div>
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Lenses</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter lens type (e.g., Progressive, Anti-glare)"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
                     )}
-                  </div>
-                </div>
+                  />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="amount">Amount (₹)</Label>
-                    <Input
-                      id="amount"
+                    <Label htmlFor="file-upload">Upload File (.jpg, .png only) *</Label>
+                    <div className="flex items-center gap-4">
+                      <Input
+                        id="file-upload"
+                        type="file"
+                        accept=".jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                        className="cursor-pointer"
+                      />
+                      {selectedFile && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Upload className="w-4 h-4" />
+                          {selectedFile.name}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
                       name="amount"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={formData.amount}
-                      onChange={handleInputChange}
-                      placeholder="Enter total amount"
-                      required
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Amount (₹) *</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              placeholder="Enter total amount"
+                              {...field}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="advanceAmount">Advance Amount (₹)</Label>
-                    <Input
-                      id="advanceAmount"
+                    <FormField
+                      control={form.control}
                       name="advanceAmount"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={formData.advanceAmount}
-                      onChange={handleInputChange}
-                      placeholder="Enter advance amount"
-                      required
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Advance Amount (₹)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              placeholder="Enter advance amount"
+                              {...field}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="paymentMode">Payment Mode</Label>
-                  <Select value={formData.paymentMode} onValueChange={(value) => setFormData(prev => ({ ...prev, paymentMode: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select payment mode" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PhonePe">PhonePe</SelectItem>
-                      <SelectItem value="GPay">GPay</SelectItem>
-                      <SelectItem value="Cash">Cash</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                  <FormField
+                    control={form.control}
+                    name="paymentMode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Payment Mode *</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select payment mode" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="PhonePe">PhonePe</SelectItem>
+                            <SelectItem value="GPay">GPay</SelectItem>
+                            <SelectItem value="Cash">Cash</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <Button type="submit" disabled={isSubmitting} className="w-full md:w-auto">
-                  {isSubmitting ? "Saving..." : "Save Record"}
-                </Button>
-              </form>
+                  <Button type="submit" disabled={isSubmitting} className="w-full md:w-auto">
+                    {isSubmitting ? "Saving..." : "Save Record"}
+                  </Button>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </TabsContent>
