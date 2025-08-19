@@ -9,9 +9,7 @@ import LoginForm from "./components/LoginForm";
 import { AppSidebar } from "./components/AppSidebar";
 import Dashboard from "./pages/Dashboard";
 import Prescription from "./pages/Prescription";
-import Invoice from "./pages/Invoice";
 import PatientRecords from "./pages/PatientRecords";
-import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -61,9 +59,7 @@ const App = () => {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/prescription" element={<Prescription />} />
-                    <Route path="/invoice" element={<Invoice />} />
                     <Route path="/patient-records" element={<PatientRecords />} />
-                    <Route path="/admin" element={<Admin />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>

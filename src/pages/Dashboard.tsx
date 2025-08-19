@@ -1,52 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { 
-  ShoppingCart, 
-  Star, 
   Users, 
   TrendingUp, 
   Package,
   Calendar
 } from "lucide-react";
 import heroSpectacles from "@/assets/hero-spectacles.jpg";
-import spectacle1 from "@/assets/spectacle-1.jpg";
-import spectacle2 from "@/assets/spectacle-2.jpg";
-import spectacle3 from "@/assets/spectacle-3.jpg";
 
 const Dashboard = () => {
-  const spectacles = [
-    {
-      id: 1,
-      name: "Premium Blue Light Glasses",
-      brand: "VisionPro",
-      price: "₹10,399",
-      image: spectacle1,
-      rating: 4.8,
-      category: "Computer Glasses",
-      inStock: true,
-    },
-    {
-      id: 2,
-      name: "Classic Gold Reading Glasses",
-      brand: "ElegantFrames",
-      price: "₹7,199",
-      image: spectacle2,
-      rating: 4.6,
-      category: "Reading Glasses",
-      inStock: true,
-    },
-    {
-      id: 3,
-      name: "Titanium Progressive Lenses",
-      brand: "TechVision",
-      price: "₹24,099",
-      image: spectacle3,
-      rating: 4.9,
-      category: "Progressive",
-      inStock: false,
-    },
-  ];
 
   const stats = [
     {
@@ -129,67 +90,6 @@ const Dashboard = () => {
           })}
         </div>
 
-        {/* Spectacles Catalog */}
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-foreground flex items-center">
-              <Package className="w-6 h-6 mr-3 text-primary" />
-              Available Spectacles
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {spectacles.map((spectacle) => (
-                <Card key={spectacle.id} className="overflow-hidden shadow-card hover:shadow-elevated transition-all duration-200 group">
-                  <div className="relative">
-                    <img
-                      src={spectacle.image}
-                      alt={spectacle.name}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <Badge
-                      variant={spectacle.inStock ? "default" : "destructive"}
-                      className="absolute top-2 right-2"
-                    >
-                      {spectacle.inStock ? "In Stock" : "Out of Stock"}
-                    </Badge>
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="space-y-2">
-                      <Badge variant="outline" className="text-xs">
-                        {spectacle.category}
-                      </Badge>
-                      <h3 className="font-semibold text-lg text-foreground">
-                        {spectacle.name}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {spectacle.brand}
-                      </p>
-                      <div className="flex items-center space-x-2">
-                        <div className="flex items-center">
-                          <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                          <span className="text-sm text-muted-foreground ml-1">
-                            {spectacle.rating}
-                          </span>
-                        </div>
-                        <span className="text-lg font-bold text-primary">
-                          {spectacle.price}
-                        </span>
-                      </div>
-                      <Button
-                        className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-primary-foreground shadow-medical"
-                        disabled={!spectacle.inStock}
-                      >
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        {spectacle.inStock ? "Add to Cart" : "Out of Stock"}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

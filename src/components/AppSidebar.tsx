@@ -3,8 +3,6 @@ import {
   Eye, 
   Home, 
   FileText, 
-  Receipt, 
-  Settings, 
   LogOut,
   History
 } from "lucide-react";
@@ -36,9 +34,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
   const navItems = [
     { path: "/dashboard", label: "Home", icon: Home },
     { path: "/prescription", label: "Prescription", icon: FileText },
-    { path: "/invoice", label: "Invoice", icon: Receipt },
     { path: "/patient-records", label: "Patient Records", icon: History },
-    { path: "/admin", label: "Admin", icon: Settings },
   ];
 
   const isActive = (path: string) => location.pathname === path;
