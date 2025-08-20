@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Eye, EyeOff, UserCheck, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { loginUser } from "@/services/httpService";
+import heroSpectacles from "@/assets/hero-spectacles.jpg";
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => void;
@@ -50,8 +51,19 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
     };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary/20 to-background p-4">
-      <div className="w-full max-w-md">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 relative"
+      style={{
+        backgroundImage: `url(${heroSpectacles})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Overlay for better readability */}
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm"></div>
+      
+      <div className="w-full max-w-md relative z-10">
         {/* Logo Header */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center mx-auto mb-4 shadow-elevated">
