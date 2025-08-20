@@ -86,16 +86,11 @@ const Prescription = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/10 to-background p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center mx-auto mb-4 shadow-elevated">
-            <FileText className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Eye Prescription</h1>
-          <p className="text-muted-foreground">Create and manage patient eye prescriptions</p>
-        </div>
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Eye Prescription</h1>
+        <p className="text-muted-foreground">Create and manage patient eye prescriptions</p>
+      </div>
 
         <Card className="shadow-elevated">
           <CardHeader>
@@ -281,7 +276,6 @@ const Prescription = () => {
             </form>
           </CardContent>
         </Card>
-      </div>
     </div>
   );
 };
