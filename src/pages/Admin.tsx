@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Settings } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 const changePasswordSchema = z.object({
   newPassword: z.string().min(6, "New password must be at least 6 characters"),
@@ -70,15 +70,10 @@ const Admin = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-2xl">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-medical">
-          <Settings className="w-5 h-5 text-primary-foreground" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Admin Settings</h1>
-          <p className="text-muted-foreground">Manage your account settings</p>
-        </div>
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Admin Settings</h1>
+        <p className="text-muted-foreground">Manage your account settings</p>
       </div>
 
       <Card className="shadow-medical border-border/50">
