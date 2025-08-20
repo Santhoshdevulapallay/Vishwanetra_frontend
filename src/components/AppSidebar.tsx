@@ -4,7 +4,8 @@ import {
   Home, 
   FileText, 
   LogOut,
-  History
+  History,
+  Settings
 } from "lucide-react";
 import {
   Sidebar,
@@ -35,6 +36,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
     { path: "/dashboard", label: "Home", icon: Home },
     { path: "/prescription", label: "Prescription", icon: FileText },
     { path: "/patient-records", label: "Patient Records", icon: History },
+    { path: "/admin", label: "Admin", icon: Settings },
   ];
 
   const isActive = (path: string) => location.pathname === path;
