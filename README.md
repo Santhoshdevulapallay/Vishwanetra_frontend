@@ -59,6 +59,8 @@ src/
  ├── App.tsx                   # Main app component
  ├── main.tsx                  # App entry point
  └── vite-env.d.ts             # Vite TypeScript env definitions
+```
+
 ## Sample Pages
 Home:
 ![Blog Screenshot](https://github.com/Santhoshdevulapallay/Vishwanetra_frontend/blob/main/public/Home_page.png)
