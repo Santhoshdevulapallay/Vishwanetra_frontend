@@ -60,3 +60,9 @@ src/
  ├── main.tsx                  # App entry point
  └── vite-env.d.ts             # Vite TypeScript env definitions
 ## Sample Pages
+Home:
+![Blog Screenshot](https://github.com/Santhoshdevulapallay/Vishwanetra_frontend/blob/main/public/Home_page.png)
+Add Patient:
+![Blog Screenshot](https://github.com/Santhoshdevulapallay/Vishwanetra_frontend/blob/main/public/AddPatient.png)
+Prescription:
+![Blog Screenshot](https://github.com/Santhoshdevulapallay/Vishwanetra_frontend/blob/main/public/Prescription.png)
