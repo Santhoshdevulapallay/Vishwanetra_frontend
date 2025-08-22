@@ -1,73 +1,62 @@
-# Welcome to your Lovable project
+# 👁️ Eye Care Management App
 
-## Project info
+A modern **React + TypeScript** web application for managing patient records and monitoring monthly revenue in an eye care clinic.  
 
-**URL**: https://lovable.dev/projects/d7920e33-635f-41dc-8560-56c8d610de0e
+This app helps healthcare providers keep track of **patient information, prescriptions, and financial data** — all in one place.  
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## ✨ Features
 
-**Use Lovable**
+- 🏠 **Home Dashboard**
+  - Overview of patient records
+  - Monthly revenue stats & charts
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d7920e33-635f-41dc-8560-56c8d610de0e) and start prompting.
+- 📋 **Patient Records**
+  - View all patients with details
+  - Manage medical and prescription history
 
-Changes made via Lovable will be committed automatically to this repo.
+- ➕ **Add Patient Records**
+  - Simple form to add new patients into the system
+  - Validations for clean data entry
 
-**Use your preferred IDE**
+- 👀 **View Patients**
+  - List of patients with search/filter functionality
+  - Quick access to individual patient records
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- 💊 **Prescriptions**
+  - Manage prescription details for patients
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- 📊 **Monthly Revenue**
+  - Track revenue statistics to monitor clinic growth
 
-Follow these steps:
+- ⚡ **Extras**
+  - Responsive layout with reusable UI components
+  - Built with `React`, `TypeScript`, and `Vite`
+  - Organized project structure for scalability
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 📂 Project Structure
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/d7920e33-635f-41dc-8560-56c8d610de0e) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```bash
+src/
+ ├── components/
+ │   ├── AppSidebar.tsx        # Sidebar navigation
+ │   ├── LoginForm.tsx         # Login form
+ │   ├── Navbar.tsx            # Top navigation bar
+ │   └── ui/                   # UI components
+ ├── pages/
+ │   ├── Admin.tsx             # Admin panel
+ │   ├── Dashboard.tsx         # Dashboard (overview + revenue)
+ │   ├── Index.tsx             # Home page
+ │   ├── NotFound.tsx          # 404 page
+ │   ├── PatientRecords.tsx    # Patient records listing
+ │   ├── Prescription.tsx      # Prescription details
+ ├── services/
+ │   ├── httpService.ts        # API service wrapper
+ │   └── patientRecordService.ts # Patient-related API calls
+ ├── App.tsx                   # Main app component
+ ├── main.tsx                  # App entry point
+ └── vite-env.d.ts             # Vite TypeScript env definitions
+## Sample Pages
